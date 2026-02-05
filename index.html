@@ -46,15 +46,15 @@ h1 {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #3cff9a;
+    color: #ff4d4d;
 }
 
 .dot {
     width: 10px;
     height: 10px;
-    background: #3cff9a;
+    background: #ff4d4d;
     border-radius: 50%;
-    box-shadow: 0 0 12px #3cff9a;
+    box-shadow: 0 0 12px #ff4d4d;
 }
 
 /* 启动日志 */
@@ -110,6 +110,35 @@ p {
     line-height: 1.9;
 }
 
+/* 入口系统 */
+.access-box {
+    padding: 26px;
+    border-top: 1px solid rgba(0,255,170,.2);
+}
+
+.access-box input {
+    width: 100%;
+    padding: 14px;
+    background: #000;
+    border: 1px solid rgba(0,255,170,.4);
+    border-radius: 8px;
+    color: #3cff9a;
+    font-family: Orbitron;
+    font-size: 15px;
+    outline: none;
+}
+
+.access-box button {
+    margin-top: 14px;
+    width: 100%;
+    padding: 14px;
+    background: #3cff9a;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 /* 弹窗 */
 .toast {
     position: fixed;
@@ -152,13 +181,21 @@ footer {
 
     <div class="boot" id="boot"></div>
 
-    <div class="status">
+    <div class="status" id="sysStatus">
         <div class="dot"></div>
-        RUNNING
+        LOCKED
     </div>
 </div>
 
 <div class="container">
+
+    <div class="module active">
+        <h2>脚本访问入口 · ACCESS TERMINAL</h2>
+        <div class="content access-box">
+            <input id="codeInput" placeholder="请输入提取码">
+            <button onclick="verifyCode()">验证并加载系统</button>
+        </div>
+    </div>
 
     <div class="module">
         <h2>系统公告 · ANNOUNCEMENT</h2>
@@ -201,12 +238,13 @@ footer {
 <div id="toast" class="toast"></div>
 
 <script>
+let authorized = false;
+
 /* 启动日志 */
 const lines = [
     "> Booting SYSTEM CORE...",
-    "> Loading Messaging Module...",
-    "> Loading Auto-Group Engine...",
-    "> Status: ONLINE"
+    "> Awaiting Authorization...",
+    "> Status: LOCKED"
 ];
 let i = 0;
 const boot = document.getElementById("boot");
@@ -229,8 +267,25 @@ function toast(msg, cls) {
     setTimeout(() => t.className = "toast", 2000);
 }
 
+/* 假验证（下一步接后端） */
+function verifyCode() {
+    const code = document.getElementById("codeInput").value.trim();
+    if (!code) return toast("请输入提取码", "yellow");
+
+    authorized = true;
+    document.getElementById("sysStatus").innerHTML = '<div class="dot" style="background:#3cff9a"></div>AUTHORIZED';
+    toast("授权成功，系统已解锁", "green");
+}
+
 /* 键盘 */
 document.addEventListener("keydown", e => {
+    if (!authorized) {
+        if (["F8","F9","F12"].includes(e.key)) {
+            e.preventDefault();
+            toast("系统未授权", "red");
+        }
+        return;
+    }
     if (e.key === "F8") toast("SYSTEM STARTED", "green");
     if (e.key === "F9") toast("SYSTEM PAUSED", "yellow");
     if (e.key === "F12") toast("EMERGENCY STOP", "red");
