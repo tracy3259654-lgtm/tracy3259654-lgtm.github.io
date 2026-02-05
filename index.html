@@ -2,41 +2,43 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>颜冬出品 · 系统控制台</title>
+<title>颜冬出品 · SYSTEM CORE</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
+* { box-sizing: border-box; }
+
 body {
     margin: 0;
-    background:
-        radial-gradient(circle at top, rgba(0,255,170,0.18), transparent 45%),
-        linear-gradient(180deg, #020b08, #000402);
+    background: radial-gradient(circle at top, rgba(0,255,170,.18), transparent 45%),
+                linear-gradient(180deg, #020b08, #000402);
     color: #caffea;
     font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
+    overflow-x: hidden;
 }
 
-/* 顶部状态 */
+/* 粒子背景 */
+canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+}
+
+/* 顶部 */
 .header {
-    padding: 50px 80px 30px;
+    padding: 50px 80px;
     position: relative;
+    z-index: 2;
 }
 
-.header h1 {
+h1 {
     font-size: 42px;
     color: #33ffb3;
-    text-shadow: 0 0 18px rgba(51,255,179,.9);
+    text-shadow: 0 0 20px rgba(51,255,179,.9);
     margin: 0;
 }
 
-.system-line {
-    margin-top: 18px;
-    font-size: 15px;
-    color: #a6ffe0;
-    opacity: .9;
-}
-
-/* RUNNING 灯 */
 .status {
     position: absolute;
     top: 50px;
@@ -45,7 +47,6 @@ body {
     align-items: center;
     gap: 8px;
     color: #3cff9a;
-    font-size: 14px;
 }
 
 .dot {
@@ -56,82 +57,100 @@ body {
     box-shadow: 0 0 12px #3cff9a;
 }
 
-/* 主体容器 */
+/* 启动日志 */
+.boot {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* 主体 */
 .container {
     width: 90%;
     max-width: 1100px;
     margin: auto;
     padding-bottom: 80px;
+    position: relative;
+    z-index: 2;
 }
 
-/* 系统模块 */
+/* 模块 */
 .module {
-    margin-top: 40px;
-    padding: 28px 32px;
+    margin-top: 30px;
     border-radius: 16px;
     background: linear-gradient(180deg, rgba(8,40,30,.95), rgba(4,18,14,.98));
-    box-shadow:
-        0 0 0 1px rgba(0,255,170,.35),
-        0 0 40px rgba(0,255,170,.15);
-    position: relative;
+    box-shadow: 0 0 0 1px rgba(0,255,170,.35),
+                0 0 40px rgba(0,255,170,.15);
     overflow: hidden;
 }
 
-/* 扫描线 */
-.module::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,.04),
-        rgba(255,255,255,.04) 1px,
-        transparent 1px,
-        transparent 4px
-    );
-    pointer-events: none;
-}
-
 .module h2 {
-    margin: 0 0 18px;
-    font-size: 20px;
+    margin: 0;
+    padding: 18px 26px;
+    font-size: 18px;
     color: #42ffd1;
+    cursor: pointer;
+    background: rgba(0,0,0,.3);
 }
 
-/* 列表文字 */
-.module p {
-    line-height: 1.9;
+.content {
+    padding: 0 26px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .6s ease, padding .6s ease;
+}
+
+.module.active .content {
+    max-height: 500px;
+    padding: 22px 26px 26px;
+}
+
+p {
     font-size: 14px;
-    color: #baffea;
+    line-height: 1.9;
 }
 
-/* 快捷键 */
-.key {
-    display: inline-block;
-    padding: 4px 10px;
-    margin-right: 8px;
-    border-radius: 6px;
-    background: rgba(0,255,170,.15);
-    box-shadow: 0 0 10px rgba(0,255,170,.4);
-    color: #33ffb3;
+/* 弹窗 */
+.toast {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    padding: 14px 22px;
+    border-radius: 10px;
+    color: #000;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: .4s;
+    z-index: 9;
 }
 
-/* 页脚 */
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.green { background: #3cff9a; }
+.yellow { background: #ffd33c; }
+.red { background: #ff4d4d; }
+
 footer {
     text-align: center;
-    margin-top: 80px;
     font-size: 12px;
-    color: #7fffd4;
     opacity: .6;
+    margin-top: 60px;
 }
 </style>
 </head>
 
 <body>
 
+<canvas id="bg"></canvas>
+
 <div class="header">
     <h1>颜冬出品</h1>
-    <div class="system-line">SYSTEM ONLINE · 定时群发 / 炒群模块加载完成</div>
+
+    <div class="boot" id="boot"></div>
 
     <div class="status">
         <div class="dot"></div>
@@ -141,66 +160,110 @@ footer {
 
 <div class="container">
 
-    <!-- 系统公告 -->
     <div class="module">
         <h2>系统公告 · ANNOUNCEMENT</h2>
-        <p>
-            颜冬出品必出精品 · 炒群专属系统<br><br>
-            项目用途：定时群发 · 炒群<br>
-            本页面为系统功能展示与操作说明界面。<br><br>
-            若有疑问请及时反馈！！！<br>
-            十分感谢您的使用与支持。
-        </p>
+        <div class="content">
+            <p>
+                颜冬出品必出精品 · 炒群专属<br><br>
+                项目用途：定时群发 / 炒群<br>
+                若有疑问请及时反馈！！！<br>
+                十分感谢您的使用。
+            </p>
+        </div>
     </div>
 
-    <!-- 核心功能 -->
     <div class="module">
-        <h2>核心功能 · CORE MODULE</h2>
-        <p>
-            ▸ 定时发送消息<br>
-            ▸ 运行过程中可随时暂停 / 恢复<br>
-            ▸ 支持炒群功能（全自动执行）
-        </p>
+        <h2>使用说明 · OPERATION</h2>
+        <div class="content">
+            <p>
+                F8：启动系统<br>
+                F9：暂停 / 继续<br>
+                F12：紧急终止
+            </p>
+        </div>
     </div>
 
-    <!-- 快捷键 -->
     <div class="module">
-        <h2>快捷键说明 · HOTKEYS</h2>
-        <p>
-            <span class="key">F8</span> 启动系统并开始任务<br>
-            <span class="key">F9</span> 暂停 / 继续运行<br>
-            <span class="key">F12</span> 紧急终止 / 强制退出
-        </p>
-    </div>
-
-    <!-- 使用流程 -->
-    <div class="module">
-        <h2>使用流程 · OPERATION FLOW</h2>
-        <p>
-            1️⃣ 启动脚本程序<br>
-            2️⃣ 设置相关参数<br>
-            3️⃣ 最大化窗口<br>
-            4️⃣ 按 F8 执行任务
-        </p>
-    </div>
-
-    <!-- 注意事项 -->
-    <div class="module">
-        <h2>注意事项 · SYSTEM NOTICE</h2>
-        <p>
-            ▸ 运行过程中请勿关闭程序窗口<br>
-            ▸ 请将窗口最大化，防止坐标错乱<br>
-            ▸ 避免频繁切换或遮挡目标窗口<br>
-            ▸ 高风险操作请自行评估后使用<br><br>
-            最终解释权归 颜冬所有
-        </p>
+        <h2>注意事项 · WARNING</h2>
+        <div class="content">
+            <p>
+                运行期间请勿关闭窗口<br>
+                请最大化程序防止坐标错乱<br>
+                避免遮挡目标窗口
+            </p>
+        </div>
     </div>
 
 </div>
 
-<footer>
-    © 颜冬出品
-</footer>
+<footer>© 颜冬出品</footer>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* 启动日志 */
+const lines = [
+    "> Booting SYSTEM CORE...",
+    "> Loading Messaging Module...",
+    "> Loading Auto-Group Engine...",
+    "> Status: ONLINE"
+];
+let i = 0;
+const boot = document.getElementById("boot");
+const timer = setInterval(() => {
+    boot.innerHTML += lines[i] + "<br>";
+    i++;
+    if (i === lines.length) clearInterval(timer);
+}, 600);
+
+/* 模块折叠 */
+document.querySelectorAll(".module h2").forEach(h => {
+    h.onclick = () => h.parentElement.classList.toggle("active");
+});
+
+/* Toast */
+function toast(msg, cls) {
+    const t = document.getElementById("toast");
+    t.className = "toast show " + cls;
+    t.textContent = msg;
+    setTimeout(() => t.className = "toast", 2000);
+}
+
+/* 键盘 */
+document.addEventListener("keydown", e => {
+    if (e.key === "F8") toast("SYSTEM STARTED", "green");
+    if (e.key === "F9") toast("SYSTEM PAUSED", "yellow");
+    if (e.key === "F12") toast("EMERGENCY STOP", "red");
+});
+
+/* 粒子 */
+const c = document.getElementById("bg");
+const ctx = c.getContext("2d");
+function resize() {
+    c.width = innerWidth;
+    c.height = innerHeight;
+}
+resize();
+window.onresize = resize;
+
+const dots = Array.from({length:80},()=>({
+    x:Math.random()*c.width,
+    y:Math.random()*c.height,
+    v:Math.random()+.2
+}));
+
+function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.fillStyle="rgba(0,255,170,.5)";
+    dots.forEach(d=>{
+        d.y+=d.v;
+        if(d.y>c.height)d.y=0;
+        ctx.fillRect(d.x,d.y,1,1);
+    });
+    requestAnimationFrame(draw);
+}
+draw();
+</script>
 
 </body>
 </html>
