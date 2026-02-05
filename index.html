@@ -272,10 +272,33 @@ function verifyCode() {
     const code = document.getElementById("codeInput").value.trim();
     if (!code) return toast("请输入提取码", "yellow");
 
-    authorized = true;
-    document.getElementById("sysStatus").innerHTML = '<div class="dot" style="background:#3cff9a"></div>AUTHORIZED';
-    toast("授权成功，系统已解锁", "green");
+    toast("正在验证提取码…", "yellow");
+
+    fetch("http://localhost:3000/verify", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code })
+    })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+        if (!ok) {
+            toast(data.msg || "验证失败", "red");
+            return;
+        }
+
+        authorized = true;
+        document.getElementById("sysStatus").innerHTML =
+            '<div class="dot" style="background:#3cff9a"></div>AUTHORIZED';
+
+        toast(`授权成功 · 有效期 ${data.days} 天`, "green");
+    })
+    .catch(() => {
+        toast("无法连接服务器", "red");
+    });
 }
+
 
 /* 键盘 */
 document.addEventListener("keydown", e => {
