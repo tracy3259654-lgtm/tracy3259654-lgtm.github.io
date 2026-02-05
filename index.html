@@ -2,140 +2,205 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>颜冬出品 · SYSTEM ONLINE</title>
+<title>颜冬出品 · 系统控制台</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
-
 body {
     margin: 0;
-    background: radial-gradient(circle at top, #0aff9d22, #02040a 60%);
-    color: #d7ffee;
-    font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
+    background:
+        radial-gradient(circle at top, rgba(0,255,170,0.18), transparent 45%),
+        linear-gradient(180deg, #020b08, #000402);
+    color: #caffea;
+    font-family: 'Orbitron', 'Microsoft YaHei', sans-serif;
 }
 
-/* 状态灯 */
+/* 顶部状态 */
+.header {
+    padding: 50px 80px 30px;
+    position: relative;
+}
+
+.header h1 {
+    font-size: 42px;
+    color: #33ffb3;
+    text-shadow: 0 0 18px rgba(51,255,179,.9);
+    margin: 0;
+}
+
+.system-line {
+    margin-top: 18px;
+    font-size: 15px;
+    color: #a6ffe0;
+    opacity: .9;
+}
+
+/* RUNNING 灯 */
 .status {
-    position: fixed;
-    top: 18px;
-    right: 24px;
-    font-family: 'Orbitron';
-    color: #2bff9b;
+    position: absolute;
+    top: 50px;
+    right: 60px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #3cff9a;
     font-size: 14px;
-    text-shadow: 0 0 12px #2bff9b;
 }
 
-/* 容器 */
+.dot {
+    width: 10px;
+    height: 10px;
+    background: #3cff9a;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #3cff9a;
+}
+
+/* 主体容器 */
 .container {
+    width: 90%;
     max-width: 1100px;
     margin: auto;
-    padding: 80px 20px;
+    padding-bottom: 80px;
 }
 
-/* 系统启动文字 */
-.boot {
-    opacity: 0;
-    animation: bootIn 1s forwards;
-}
-
-.boot:nth-child(2) { animation-delay: .6s; }
-.boot:nth-child(3) { animation-delay: 1.2s; }
-
-@keyframes bootIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-h1 {
-    font-family: 'Orbitron';
-    font-size: 46px;
-    background: linear-gradient(90deg, #2bff9b, #5eefff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 25px #2bff9b;
-}
-
-h2 {
-    font-family: 'Orbitron';
-    color: #7dffd2;
-}
-
-.card {
-    background: linear-gradient(180deg, #0c1f18, #050b09);
+/* 系统模块 */
+.module {
+    margin-top: 40px;
+    padding: 28px 32px;
     border-radius: 16px;
-    padding: 28px;
-    margin-top: 36px;
+    background: linear-gradient(180deg, rgba(8,40,30,.95), rgba(4,18,14,.98));
     box-shadow:
-        0 0 0 1px rgba(0,255,160,.35),
-        0 0 40px rgba(0,255,160,.25);
+        0 0 0 1px rgba(0,255,170,.35),
+        0 0 40px rgba(0,255,170,.15);
+    position: relative;
+    overflow: hidden;
 }
 
-kbd {
-    background: #000;
-    border: 1px solid #2bff9b;
-    padding: 2px 6px;
-    border-radius: 4px;
-    box-shadow: 0 0 8px #2bff9b;
-    font-family: 'Orbitron';
+/* 扫描线 */
+.module::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.04),
+        rgba(255,255,255,.04) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+    pointer-events: none;
 }
 
-.toast {
-    position: fixed;
-    bottom: 40px;
-    right: 40px;
-    background: #0c1f18;
-    border: 1px solid #2bff9b;
-    padding: 14px 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px #2bff9b;
-    display: none;
+.module h2 {
+    margin: 0 0 18px;
+    font-size: 20px;
+    color: #42ffd1;
+}
+
+/* 列表文字 */
+.module p {
+    line-height: 1.9;
+    font-size: 14px;
+    color: #baffea;
+}
+
+/* 快捷键 */
+.key {
+    display: inline-block;
+    padding: 4px 10px;
+    margin-right: 8px;
+    border-radius: 6px;
+    background: rgba(0,255,170,.15);
+    box-shadow: 0 0 10px rgba(0,255,170,.4);
+    color: #33ffb3;
+}
+
+/* 页脚 */
+footer {
+    text-align: center;
+    margin-top: 80px;
+    font-size: 12px;
+    color: #7fffd4;
+    opacity: .6;
 }
 </style>
 </head>
 
 <body>
 
-<div class="status">🟢 RUNNING</div>
+<div class="header">
+    <h1>颜冬出品</h1>
+    <div class="system-line">SYSTEM ONLINE · 定时群发 / 炒群模块加载完成</div>
 
-<div class="container">
-    <h1 class="boot">颜冬出品</h1>
-    <p class="boot">SYSTEM ONLINE · 定时群发 / 炒群模块加载完成</p>
-
-    <div class="card boot">
-        <h2>核心功能</h2>
-        <p>▸ 定时发送消息<br>▸ 随时暂停 / 继续<br>▸ 全自动炒群</p>
-    </div>
-
-    <div class="card">
-        <h2>快捷键说明</h2>
-        <p>
-            <kbd>F8</kbd> 启动系统<br>
-            <kbd>F9</kbd> 暂停 / 继续<br>
-            <kbd>F12</kbd> 紧急终止
-        </p>
+    <div class="status">
+        <div class="dot"></div>
+        RUNNING
     </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="container">
 
-<script>
-document.addEventListener('keydown', e => {
-    const t = document.getElementById('toast');
-    const map = {
-        F8: 'SYSTEM START',
-        F9: 'SYSTEM PAUSE / RESUME',
-        F12: 'EMERGENCY EXIT'
-    };
-    if (map[e.key]) {
-        t.textContent = map[e.key];
-        t.style.display = 'block';
-        setTimeout(()=>t.style.display='none',1500);
-    }
-});
-</script>
+    <!-- 系统公告 -->
+    <div class="module">
+        <h2>系统公告 · ANNOUNCEMENT</h2>
+        <p>
+            颜冬出品必出精品 · 炒群专属系统<br><br>
+            项目用途：定时群发 · 炒群<br>
+            本页面为系统功能展示与操作说明界面。<br><br>
+            若有疑问请及时反馈！！！<br>
+            十分感谢您的使用与支持。
+        </p>
+    </div>
+
+    <!-- 核心功能 -->
+    <div class="module">
+        <h2>核心功能 · CORE MODULE</h2>
+        <p>
+            ▸ 定时发送消息<br>
+            ▸ 运行过程中可随时暂停 / 恢复<br>
+            ▸ 支持炒群功能（全自动执行）
+        </p>
+    </div>
+
+    <!-- 快捷键 -->
+    <div class="module">
+        <h2>快捷键说明 · HOTKEYS</h2>
+        <p>
+            <span class="key">F8</span> 启动系统并开始任务<br>
+            <span class="key">F9</span> 暂停 / 继续运行<br>
+            <span class="key">F12</span> 紧急终止 / 强制退出
+        </p>
+    </div>
+
+    <!-- 使用流程 -->
+    <div class="module">
+        <h2>使用流程 · OPERATION FLOW</h2>
+        <p>
+            1️⃣ 启动脚本程序<br>
+            2️⃣ 设置相关参数<br>
+            3️⃣ 最小化窗口<br>
+            4️⃣ 按 F8 执行任务
+        </p>
+    </div>
+
+    <!-- 注意事项 -->
+    <div class="module">
+        <h2>注意事项 · SYSTEM NOTICE</h2>
+        <p>
+            ▸ 运行过程中请勿关闭程序窗口<br>
+            ▸ 请将窗口最大化，防止坐标错乱<br>
+            ▸ 避免频繁切换或遮挡目标窗口<br>
+            ▸ 高风险操作请自行评估后使用<br><br>
+            最终解释权归 颜冬所有
+        </p>
+    </div>
+
+</div>
+
+<footer>
+    © 颜冬出品
+</footer>
 
 </body>
 </html>
