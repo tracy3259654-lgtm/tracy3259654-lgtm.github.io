@@ -1,169 +1,141 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>颜冬天才出品</title>
-    <style>
-        body {
+<meta charset="UTF-8">
+<title>颜冬出品 · SYSTEM ONLINE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
     margin: 0;
-    font-family: 
-        -apple-system,
-        BlinkMacSystemFont,
-        "PingFang SC",
-        "Microsoft YaHei",
-        "Noto Sans SC",
-        "Segoe UI",
-        Arial,
-        sans-serif;
-    background: #0e1117;
-    color: #e6e6e6;
+    background: radial-gradient(circle at top, #0aff9d22, #02040a 60%);
+    color: #d7ffee;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
 }
 
-        .container {
-            width: 90%;
-            max-width: 1100px;
-            margin: auto;
-            padding: 40px 0;
-        }
-        h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-            color: #58a6ff;
-        }
-        h2 {
-            color: #79c0ff;
-            margin-top: 50px;
-        }
-        p {
-            line-height: 1.8;
-            font-size: 16px;
-        }
-        .highlight {
-            color: #ff7b72;
-            font-weight: bold;
-        }
-       .card {
-    background: #161b22;
-    border-radius: 12px;
-    padding: 18px 22px;
-    margin-top: 20px;
-    box-shadow: 0 0 18px rgba(0,0,0,0.45);
+/* 状态灯 */
+.status {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    font-family: 'Orbitron';
+    color: #2bff9b;
+    font-size: 14px;
+    text-shadow: 0 0 12px #2bff9b;
 }
 
-        img {
-            width: 100%;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-        footer {
-            margin-top: 80px;
-            text-align: center;
-            font-size: 14px;
-            color: #8b949e;
-        }
-    </style>
+/* 容器 */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 80px 20px;
+}
+
+/* 系统启动文字 */
+.boot {
+    opacity: 0;
+    animation: bootIn 1s forwards;
+}
+
+.boot:nth-child(2) { animation-delay: .6s; }
+.boot:nth-child(3) { animation-delay: 1.2s; }
+
+@keyframes bootIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    font-family: 'Orbitron';
+    font-size: 46px;
+    background: linear-gradient(90deg, #2bff9b, #5eefff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 25px #2bff9b;
+}
+
+h2 {
+    font-family: 'Orbitron';
+    color: #7dffd2;
+}
+
+.card {
+    background: linear-gradient(180deg, #0c1f18, #050b09);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 36px;
+    box-shadow:
+        0 0 0 1px rgba(0,255,160,.35),
+        0 0 40px rgba(0,255,160,.25);
+}
+
+kbd {
+    background: #000;
+    border: 1px solid #2bff9b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #2bff9b;
+    font-family: 'Orbitron';
+}
+
+.toast {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background: #0c1f18;
+    border: 1px solid #2bff9b;
+    padding: 14px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #2bff9b;
+    display: none;
+}
+</style>
 </head>
+
 <body>
 
+<div class="status">🟢 RUNNING</div>
+
 <div class="container">
+    <h1 class="boot">颜冬出品</h1>
+    <p class="boot">SYSTEM ONLINE · 定时群发 / 炒群模块加载完成</p>
 
-   <h1>颜冬天才出品</h1>
-
-<p class="highlight" style="font-size:18px;">
-    项目用途：定时群发 · 炒群
-</p>
-
-<p>
-    <strong>颜冬出品必出精品</strong> ｜ <span class="highlight">炒群专属</span><br>
-    若有疑问请及时反馈！！！ 十分感谢！！！<br>
-    效果展示可到 <strong>管理员位置</strong> 进行观摩。
-</p>
-
-
-    
-
-    <div class="card">
+    <div class="card boot">
         <h2>核心功能</h2>
-        <p style="line-height:1.6;">
-    ▸ 定时发送消息<br>
-    ▸ 运行过程中可随时暂停<br>
-    ▸ 支持炒群功能（全自动）
-</p>
-
-        <img src="/static/images/img2.png" alt="功能展示">
+        <p>▸ 定时发送消息<br>▸ 随时暂停 / 继续<br>▸ 全自动炒群</p>
     </div>
 
-<div class="card">
-    <h2>使用说明（必看）</h2>
-    <p style="line-height:1.7;">
-        ▸ <strong>F8</strong> ：启动脚本并开始执行任务<br>
-        ▸ <strong>F9</strong> ：暂停 / 继续运行<br>
-        <span style="color:#8b949e;">
-            （暂停后再次启动，将自动重置当前倒计时）
-        </span><br>
-        ▸ <strong>F12</strong> ：紧急暂停 / 强制退出脚本<br><br>
-
-        建议在启动脚本前，提前确认参数设置与目标窗口位置，
-        运行过程中请勿频繁切换窗口或遮挡界面，以确保执行稳定。
-    </p>
-</div>
-
-<div class="card">
-    <h2>脚本入口</h2>
-    <p style="line-height:1.7;">
-        本脚本为 <strong>本地运行工具</strong>，请在电脑中直接启动程序文件。<br><br>
-
-        使用流程建议：<br>
-        1️⃣ 启动脚本程序<br>
-        2️⃣ 按照说明完成参数设置<br>
-        3️⃣ 将窗口最小化<br>
-        4️⃣ 按 <strong>F8</strong> 开始执行任务<br><br>
-
-        <span style="color:#8b949e;">
-            如需获取脚本或更新版本，请联系管理员。
-        </span>
-    </p>
-</div>
-
-
     <div class="card">
-        <h2>注意事项（务必查看）</h2>
-        <p class="highlight">
-            运行过程中请勿关闭程序窗口！<br>
-            请将窗口最大化运行，防止坐标错乱！！！！
+        <h2>快捷键说明</h2>
+        <p>
+            <kbd>F8</kbd> 启动系统<br>
+            <kbd>F9</kbd> 暂停 / 继续<br>
+            <kbd>F12</kbd> 紧急终止
         </p>
     </div>
-
-<div class="card">
-    <h2>脚本程序入口</h2>
-    <p>
-        本工具为 <strong>本地运行脚本</strong>，请从下方入口进入程序目录。
-    </p>
-
-    <p class="highlight">
-        👉 使用方式：双击运行 launcher 文件夹内的启动程序
-    </p>
-
-    <a href="../launcher/" style="
-        display:inline-block;
-        margin-top:15px;
-        padding:10px 18px;
-        background:#238636;
-        color:#ffffff;
-        border-radius:8px;
-        text-decoration:none;
-        font-weight:bold;
-    ">
-        打开脚本程序文件夹
-    </a>
 </div>
 
-    
-    <footer>
-        © 颜冬天才出品
-    </footer>
+<div class="toast" id="toast"></div>
 
-</div>
+<script>
+document.addEventListener('keydown', e => {
+    const t = document.getElementById('toast');
+    const map = {
+        F8: 'SYSTEM START',
+        F9: 'SYSTEM PAUSE / RESUME',
+        F12: 'EMERGENCY EXIT'
+    };
+    if (map[e.key]) {
+        t.textContent = map[e.key];
+        t.style.display = 'block';
+        setTimeout(()=>t.style.display='none',1500);
+    }
+});
+</script>
 
 </body>
 </html>
